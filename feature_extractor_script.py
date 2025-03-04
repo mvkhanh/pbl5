@@ -177,7 +177,7 @@ for class_name in os.listdir(input_root):
             segment_output_path = os.path.join(output_class_path, f"{video_file}_segment_{i:03d}.npy")
             segment = [os.path.join(temp_frame_dir, frame) for frame in segment]
             features = get_features_from_segment(model, segment)
-            np.save(segment_output_path, np.array(features))
+            np.save(segment_output_path, features.cpu().numpy())
 
         # Xóa frames sau khi xử lý xong
         for frame in os.listdir(temp_frame_dir):
