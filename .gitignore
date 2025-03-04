@@ -9,3 +9,5 @@ Segments/
 UCFCrimeDataset/
 data/
 *.ipynb
+.*
+*.code-workspace
