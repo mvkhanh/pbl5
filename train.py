@@ -11,7 +11,7 @@ print(f"Using device: {DEVICE}")
 EPOCHS = 100
 LEARNING_RATE = 5e-5
 WEIGHT_DECAY = 0.005
-BATCH_SIZE = 32
+BATCH_SIZE = 30
 PATIENCE = 7
 CHECKPOINT_PATH = "ckpt/best_model.pth"
 # LOG_DIR = "logs"
