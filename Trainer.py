@@ -3,9 +3,10 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
 import os
+from tqdm import tqdm
 
 class Trainer:
-    def __init__(self, model, train_loader, val_loader, loss_fn, optimizer, device='cuda', epochs=50, patience=7, checkpoint_path="checkpoint.pth"):
+    def __init__(self, model, train_loader, val_loader, loss_fn, optimizer, device='cuda', epochs=50, patience=7, checkpoint_path="checkpoint.pth", acc_loss_path='acc_loss.txt'):
         self.model = model.to(device)
         self.train_loader = train_loader
         self.val_loader = val_loader
@@ -13,6 +14,7 @@ class Trainer:
         self.epochs = epochs
         self.patience = patience
         self.checkpoint_path = checkpoint_path
+        self.acc_loss_path = acc_loss_path
         
         self.criterion = loss_fn
         self.optimizer = optimizer
@@ -72,24 +74,29 @@ class Trainer:
         for epoch in range(self.start_epoch, self.epochs):
             self.model.train()
             total_loss, correct, total = 0, 0, 0
-            
-            for inputs, labels in self.train_loader:
-                inputs, labels = inputs.to(self.device), labels.to(self.device)
-                outputs = self.model(inputs)
-                
-                loss = self.criterion(outputs, labels)
-                self.optimizer.zero_grad()
-                loss.backward()
-                self.optimizer.step()
-                
-                total_loss += loss.item()
-                preds = (outputs > 0.5).float()
-                correct += (preds == labels).sum().item()
-                total += labels.size(0)
+            with tqdm(total=len(self.train_loader), desc=f"Epoch {epoch+1}/{self.epochs}", unit="batch") as pbar:
+                for inputs, labels in self.train_loader:
+                    inputs, labels = inputs.to(self.device), labels.to(self.device)
+                    outputs = self.model(inputs)
+                    
+                    loss = self.criterion(outputs, labels)
+                    self.optimizer.zero_grad()
+                    loss.backward()
+                    self.optimizer.step()
+                    
+                    total_loss += loss.item()
+                    preds = (outputs > 0.5).float()
+                    correct += (preds == labels).sum().item()
+                    total += labels.size(0)
+
+                    pbar.set_postfix(loss=loss.item(), acc=correct/total)
+                    pbar.update(1)  # Tăng tiến trìn
 
             train_loss = total_loss / len(self.train_loader)
             train_acc = correct / total
             val_loss, val_acc = self._eval()
+            with open(self.acc_loss_path, 'a') as f:
+                f.write(f'{epoch} {train_loss} {train_acc} {val_loss} {val_acc}')
 
             # 🎯 Ghi log TensorBoard
             # self.writer.add_scalar('Loss/Train', train_loss, epoch)

@@ -15,12 +15,15 @@ BATCH_SIZE = 32
 PATIENCE = 7
 CHECKPOINT_PATH = "ckpt/best_model.pth"
 # LOG_DIR = "logs"
-abnormal_path = 'UniformerData/Abnormal/'
-normal_path = 'UniformerData/NormalVideos/'
+train_abnormal_path = 'UniformerData/Train/Abnormal/'
+train_normal_path = 'UniformerData/Train/NormalVideos/'
+test_normal_path = 'UniformerData/Test/NormalVideos/'
+test_abnormal_path = 'UniformerData/Test/Abnormal/'
 
 if __name__ == '__main__':
-    train_loader, val_loader = get_dataloader(abnormal_path, normal_path, BATCH_SIZE)
-
+    train_loader, val_loader = get_dataloader(train_abnormal_path, train_normal_path, BATCH_SIZE, split_size=0.15)
+    # train_loader = get_dataloader(train_abnormal_path, train_normal_path, batch_size=BATCH_SIZE)
+    # test_loader = get_dataloader(test_abnormal_path, test_normal_path, batch_size=BATCH_SIZE)
     # Model
     model = get_model().to(DEVICE)
 

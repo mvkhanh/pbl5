@@ -47,27 +47,31 @@ def custom_collate_fn(batch):
 
     return torch.stack(padded_videos), torch.stack(labels)
 
-def get_dataloader(abnormal_path, normal_path, batch_size):
+def get_dataloader(abnormal_path, normal_path, batch_size, split_size=None):
     dataset = UCFCrimeDataset(abnormal_path, normal_path)
-    # Lấy chỉ số của abnormal & normal
-    indices = np.arange(len(dataset))
-    labels = dataset.labels.numpy().flatten()
-
-    # Chia tỉ lệ giữ nguyên phân phối class
-    train_idx, val_idx = train_test_split(indices, test_size=0.2, stratify=labels, random_state=42) # 0.3 neu co validation
-    train_dataset = Subset(dataset, train_idx)
-    val_dataset = Subset(dataset, val_idx)
-
     num_workers = os.cpu_count() // 2  # Tận dụng đa luồng
-    train_loader = DataLoader(
-        train_dataset, batch_size=batch_size, shuffle=True, collate_fn=custom_collate_fn,
-        num_workers=num_workers, pin_memory=True
-    )
+    if split_size:
+        # Lấy chỉ số của abnormal & normal
+        indices = np.arange(len(dataset))
+        labels = dataset.labels.numpy().flatten()
 
-    val_loader = DataLoader(
-        val_dataset, batch_size=batch_size, shuffle=False, collate_fn=custom_collate_fn,
-        num_workers=num_workers, pin_memory=True
-    )
+        # Chia tỉ lệ giữ nguyên phân phối class
+        train_idx, val_idx = train_test_split(indices, test_size=split_size, stratify=labels, random_state=42) # 0.3 neu co validation
+        train_dataset = Subset(dataset, train_idx)
+        val_dataset = Subset(dataset, val_idx)
 
-    print(f"Train size: {len(train_dataset)}, Val size: {len(val_dataset)}")
-    return train_loader, val_loader
+
+        train_loader = DataLoader(
+            train_dataset, batch_size=batch_size, shuffle=True, collate_fn=custom_collate_fn,
+            num_workers=num_workers, pin_memory=True
+        )
+
+        val_loader = DataLoader(
+            val_dataset, batch_size=batch_size, shuffle=False, collate_fn=custom_collate_fn,
+            num_workers=num_workers, pin_memory=True
+        )
+
+        print(f"Train size: {len(train_dataset)}, Val size: {len(val_dataset)}")
+        return train_loader, val_loader
+    return DataLoader(dataset, batch_size=batch_size, shuffle=False, collate_fn=custom_collate_fn,
+                      num_workers=num_workers, pin_memory=True)
