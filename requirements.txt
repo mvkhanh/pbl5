@@ -7,3 +7,5 @@ tqdm
 opencv-python
 timm
 gdown
+scikit-learn
+tensorboard
