@@ -10,14 +10,14 @@ from sklearn.metrics import precision_score, recall_score, f1_score
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {DEVICE}")
 
-BATCH_SIZE = 16
+BATCH_SIZE = 32
 
 CHECKPOINT_PATH = "ckpt/best_model.pth"
 
 test_normal_path = 'UniformerData/Test/NormalVideos/'
 test_abnormal_path = 'UniformerData/Test/Abnormal/'
 
-def eval(model, loss_fn, data_loader):
+def eval1(model, loss_fn, data_loader):
     """Đánh giá mô hình trên tập test và tính Precision, Recall, F1-score."""
     model.eval()
     correct = 0
@@ -72,5 +72,5 @@ if __name__ == '__main__':
          load_checkpoint(model, CHECKPOINT_PATH)
 
     loss_fn = nn.BCEWithLogitsLoss()
-    test_loss, test_acc, precision, recall, test_f1_score = eval(model, loss_fn, test_loader)
+    test_loss, test_acc, precision, recall, test_f1_score = eval1(model, loss_fn, test_loader)
     print(f'Test loss: {test_loss:.4f} | Test accuracy: {test_acc:.4f} | Precision: {precision} | Recall: {recall} | F1 score: {test_f1_score}')
