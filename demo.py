@@ -25,4 +25,5 @@ if __name__ == '__main__':
     if os.path.exists(CHECKPOINT_PATH):
          load_checkpoint(model, CHECKPOINT_PATH)
 
-    video_path = os.path.join()
+    video_path = os.path.join(test_abnormal_path, '')
+    

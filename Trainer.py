@@ -96,7 +96,7 @@
 #             train_acc = correct / total
 #             val_loss, val_acc = self._eval()
 #             with open(self.acc_loss_path, 'a') as f:
-#                 f.write(f'{epoch} {train_loss} {train_acc} {val_loss} {val_acc}')
+#                 f.write(f'{epoch} {train_loss:.4f} {train_acc:.4f} {val_loss:.4f} {val_acc:.4f}\n')
 
 #             # 🎯 Ghi log TensorBoard
 #             # self.writer.add_scalar('Loss/Train', train_loss, epoch)
@@ -231,7 +231,7 @@ class Trainer:
             val_loss, val_acc = self._eval()
 
             with open(self.acc_loss_path, 'a') as f:
-                f.write(f'{epoch} {train_loss} {train_acc} {val_loss} {val_acc}\n')
+                f.write(f'{epoch} {train_loss:.4f} {train_acc:.4f} {val_loss:.4f} {val_acc:.4f}\n')
 
             print(f"Epoch {epoch+1}/{self.epochs}: Train Loss {train_loss:.4f} | Train Acc {train_acc:.4f} | Val Loss {val_loss:.4f} | Val Acc {val_acc:.4f}")
 
