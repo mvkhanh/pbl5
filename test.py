@@ -25,10 +25,11 @@ def eval(model, loss_fn, data_loader):
     all_preds = []
     all_labels = []
     
-    with torch.inference_mode():
+    with torch.inference_mode(), torch.autocast(device_type=DEVICE, dtype=torch.float16):  # ✅ Dùng float16
         for inputs, labels in data_loader:
             inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
-            outputs = model(inputs)
+            
+            outputs = model(inputs)  # Forward pass
             
             # Tính loss
             loss = loss_fn(outputs, labels)
