@@ -44,9 +44,10 @@ def video_to_tensor(video_path):
     
     cap.release()
     
-    if len(frames) != 32:
-        print(f"⚠️ {video_path}: không đủ 32 frames ({len(frames)})")
-        return None
+    if len(frames) < 32:
+        frames = frames + [frames[-1]] * (32 - len(frames))
+    elif len(frames) > 32:
+        frames = frames[:32]
     
     # Áp dụng transform
     frames = transform(frames).squeeze() # [3, 32, 224, 224]
