@@ -47,7 +47,7 @@ def custom_collate_fn(batch):
 
     return torch.stack(padded_videos), torch.stack(labels)
 
-def get_dataloader(abnormal_path, normal_path, batch_size, split_size=None):
+def get_dataloader(abnormal_path, normal_path, batch_size, split_size=None, isTrain=False):
     dataset = UCFCrimeDataset(abnormal_path, normal_path)
     num_workers = os.cpu_count() // 2  # Tận dụng đa luồng
     if split_size:
@@ -73,5 +73,6 @@ def get_dataloader(abnormal_path, normal_path, batch_size, split_size=None):
 
         print(f"Train size: {len(train_dataset)}, Val size: {len(val_dataset)}")
         return train_loader, val_loader
-    return DataLoader(dataset, batch_size=batch_size, shuffle=False, collate_fn=custom_collate_fn,
+    
+    return DataLoader(dataset, batch_size=batch_size, shuffle=isTrain, collate_fn=custom_collate_fn,
                       num_workers=num_workers, pin_memory=True)
