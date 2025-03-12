@@ -10,8 +10,8 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {DEVICE}")
 EPOCHS = 100
 LEARNING_RATE = 5e-5
-WEIGHT_DECAY = 0.01
-BATCH_SIZE = 16
+WEIGHT_DECAY = 0.005
+BATCH_SIZE = 32
 PATIENCE = 5
 CHECKPOINT_PATH = "ckpt/best_model.pth"
 # LOG_DIR = "logs"
@@ -28,7 +28,8 @@ if __name__ == '__main__':
     model = MyModel().to(DEVICE)
 
     # Train
-    loss_fn = nn.BCEWithLogitsLoss()
+    pos_weight = torch.tensor([35000 / 7500])  # Tăng trọng số lớp dương
+    loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight.to(DEVICE))
     trainer = Trainer(model, train_loader, test_loader, loss_fn,
                   optim.Adam(params=model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY), epochs=EPOCHS, device=DEVICE, 
                   patience=PATIENCE, checkpoint_path=CHECKPOINT_PATH)

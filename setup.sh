@@ -9,7 +9,8 @@ echo "Installing Python dependencies..."
 pip3 install -r requirements.txt
 
 echo "Downloading dataset..."
-gdown -O UniformerData.zip "https://drive.google.com/uc?id=1EpM1kL4-OnLFB4ZHrF0i1luoqSYivAov"
+# gdown -O UniformerData.zip "https://drive.google.com/uc?id=1EpM1kL4-OnLFB4ZHrF0i1luoqSYivAov"
+gdown -O UniformerData.zip "https://drive.google.com/uc?id=11B3ddNl-ATcJLh0j0pBt1FNHvkwley0x"
 
 echo "Installing unzip and extracting dataset..."
 sudo apt install unzip -y
@@ -20,3 +21,4 @@ pip3 uninstall torch torchvision torchaudio -y
 pip3 install torch torchvision torchaudio
 
 echo "Setup completed!"
+
