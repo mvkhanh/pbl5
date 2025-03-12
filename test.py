@@ -2,6 +2,7 @@ from dataset import get_dataloader
 import torch
 import torch.nn as nn
 from model import get_model
+from mymodel import MyModel
 import os
 import numpy as np
 from sklearn.metrics import precision_score, recall_score, f1_score
@@ -66,7 +67,7 @@ def load_checkpoint(model, checkpoint_path):
 if __name__ == '__main__':
     test_loader = get_dataloader(test_abnormal_path, test_normal_path, batch_size=BATCH_SIZE)
     # Model
-    model = get_model().to(DEVICE)
+    model = MyModel().to(DEVICE)
 
     if os.path.exists(CHECKPOINT_PATH):
          load_checkpoint(model, CHECKPOINT_PATH)
