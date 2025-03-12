@@ -10,7 +10,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {DEVICE}")
 EPOCHS = 100
 LEARNING_RATE = 5e-5
-WEIGHT_DECAY = 0.005
+WEIGHT_DECAY = 0.01
 BATCH_SIZE = 30
 PATIENCE = 5
 CHECKPOINT_PATH = "ckpt/best_model.pth"
@@ -21,8 +21,9 @@ test_normal_path = 'UniformerData/Test/NormalVideos/'
 test_abnormal_path = 'UniformerData/Test/Abnormal/'
 
 if __name__ == '__main__':
-    train_loader = get_dataloader(train_abnormal_path, train_normal_path, batch_size=BATCH_SIZE, isTrain=True)
-    test_loader = get_dataloader(test_abnormal_path, test_normal_path, batch_size=BATCH_SIZE)
+    # train_loader = get_dataloader(train_abnormal_path, train_normal_path, batch_size=BATCH_SIZE, isTrain=True)
+    # test_loader = get_dataloader(test_abnormal_path, test_normal_path, batch_size=BATCH_SIZE)
+    train_loader, test_loader = get_dataloader(train_abnormal_path, train_normal_path, batch_size=BATCH_SIZE, split_size=0.15)
     # Model
     model = get_model().to(DEVICE)
 
