@@ -3,6 +3,8 @@ import torch
 import torch.nn as nn
 from model import get_model
 import os
+import numpy as np
+from sklearn.metrics import precision_score, recall_score, f1_score
 
 # ---------------------- Cấu hình ----------------------
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -16,24 +18,43 @@ test_normal_path = 'UniformerData/Test/NormalVideos/'
 test_abnormal_path = 'UniformerData/Test/Abnormal/'
 
 def eval(model, loss_fn, data_loader):
-        """Đánh giá mô hình trên tập validation."""
-        model.eval()
-        total_loss, correct, total = 0, 0, 0
-        with torch.inference_mode():
-            for inputs, labels in data_loader:
-                inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
-                outputs = model(inputs)
-                
-                loss = loss_fn(outputs, labels)
-                total_loss += loss.item()
-                
-                preds = (outputs > 0.5).float()
-                correct += (preds == labels).sum().item()
-                total += labels.size(0)
+    """Đánh giá mô hình trên tập test và tính Precision, Recall, F1-score."""
+    model.eval()
+    correct = 0
+    total_loss = 0
+    all_preds = []
+    all_labels = []
+    
+    with torch.inference_mode():
+        for inputs, labels in data_loader:
+            inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
+            outputs = model(inputs)
+            
+            # Tính loss
+            loss = loss_fn(outputs, labels)
+            total_loss += loss.item()
+            
+            # Chuyển output thành nhãn dự đoán (0 hoặc 1)
+            preds = (outputs > 0.5).float()
+            
+            # Lưu lại dự đoán và nhãn thật
+            all_preds.extend(preds.cpu().numpy())
+            all_labels.extend(labels.cpu().numpy())
 
-        val_loss = total_loss / len(data_loader)
-        val_acc = correct / total
-        return val_loss, val_acc
+    # Chuyển về numpy array
+    all_preds = np.array(all_preds).flatten()
+    all_labels = np.array(all_labels).flatten()
+
+    # Tính các chỉ số đánh giá
+    precision = precision_score(all_labels, all_preds)
+    recall = recall_score(all_labels, all_preds)
+    f1 = f1_score(all_labels, all_preds)
+    correct += (all_preds == all_labels).sum().item()    
+    acc = correct / len(all_preds)
+
+    avg_loss = total_loss / len(data_loader)
+
+    return avg_loss, acc, precision, recall, f1
 
 def load_checkpoint(model, checkpoint_path):
         """Nạp lại trạng thái từ checkpoint."""
@@ -50,5 +71,5 @@ if __name__ == '__main__':
          load_checkpoint(model, CHECKPOINT_PATH)
 
     loss_fn = nn.BCEWithLogitsLoss()
-    test_loss, test_acc = eval(model, loss_fn, test_loader)
-    print(f'Test loss: {test_loss:.4f} | Test accuracy: {test_acc:.4f}')
+    test_loss, test_acc, precision, recall, test_f1_score = eval(model, loss_fn, test_loader)
+    print(f'Test loss: {test_loss:.4f} | Test accuracy: {test_acc:.4f} | Precision: {precision} | Recall: {recall} | F1 score: {test_f1_score}')
