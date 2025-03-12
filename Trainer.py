@@ -170,7 +170,7 @@ class Trainer:
         """Nạp lại trạng thái từ checkpoint."""
         checkpoint = torch.load(self.checkpoint_path, map_location=self.device)
         self.model.load_state_dict(checkpoint['model_state'])
-        self.optimizer.load_state_dict(checkpoint['optimizer_state'])
+        # self.optimizer.load_state_dict(checkpoint['optimizer_state'])
         if 'scaler_state' in checkpoint:
             self.scaler.load_state_dict(checkpoint['scaler_state'])  # ✅ Load lại GradScaler
         self.start_epoch = checkpoint['epoch'] + 1
