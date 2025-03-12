@@ -6,6 +6,9 @@ git clone https://github.com/mvkhanh/pbl5.git
 gdown -O UniformerData.zip "https://drive.google.com/uc?id=1EpM1kL4-OnLFB4ZHrF0i1luoqSYivAov"
 
 apt install unzip
-
+# if torch error
+pip uninstall torch torchvision torchaudio -y
+pip install torch torchvision torchaudio
+#
 P40 bacth: 16, 4.7s/batch, train: 1818 batch => 2.37h
     batch: 30, 8.5s/batch, train: 970 batch => 2.3h ~~same
