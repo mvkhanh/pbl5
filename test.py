@@ -51,8 +51,7 @@ def eval1(model, loss_fn, data_loader):
     precision = precision_score(all_labels, all_preds)
     recall = recall_score(all_labels, all_preds)
     f1 = f1_score(all_labels, all_preds)
-    correct += (all_preds == all_labels).sum().item()    
-    acc = correct / len(all_preds)
+    acc = (all_preds == all_labels).mean() 
 
     avg_loss = total_loss / len(data_loader)
 
