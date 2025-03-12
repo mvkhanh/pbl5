@@ -145,6 +145,7 @@ class Trainer:
 
         self.criterion = loss_fn
         self.optimizer = optimizer
+        self.threshold = 0.5
         self.scheduler = optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, mode='min', patience=3, factor=0.5)
         self.scaler = torch.amp.GradScaler('cuda')  # ✅ Thêm GradScaler cho AMP
 
@@ -190,7 +191,8 @@ class Trainer:
                     loss = self.criterion(outputs, labels)
 
                 total_loss += loss.item()
-                preds = (outputs > 0.5).float()
+                outputs = torch.sigmoid(outputs)
+                preds = (outputs > self.threshold).float()
                 correct += (preds == labels).sum().item()
                 total += labels.size(0)
 
@@ -217,9 +219,9 @@ class Trainer:
                     self.scaler.scale(loss).backward()  # ✅ Dùng scaler để backward
                     self.scaler.step(self.optimizer)
                     self.scaler.update()  # ✅ Cập nhật scale
-
+                    outputs = torch.sigmoid(outputs)
                     total_loss += loss.item()
-                    preds = (outputs > 0.5).float()
+                    preds = (outputs > self.threshold).float()
                     correct += (preds == labels).sum().item()
                     total += labels.size(0)
 
