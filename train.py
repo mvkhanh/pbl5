@@ -2,7 +2,7 @@ from dataset import get_dataloader
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from model import get_model
+from mymodel import MyModel
 from Trainer import Trainer
 
 # ---------------------- Cấu hình ----------------------
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     # test_loader = get_dataloader(test_abnormal_path, test_normal_path, batch_size=BATCH_SIZE)
     train_loader, test_loader = get_dataloader(train_abnormal_path, train_normal_path, batch_size=BATCH_SIZE, split_size=0.15)
     # Model
-    model = get_model().to(DEVICE)
+    model = MyModel().to(DEVICE)
 
     # Train
     loss_fn = nn.BCEWithLogitsLoss()
