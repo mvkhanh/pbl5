@@ -23,4 +23,6 @@ class MyModel(nn.Module):
     def forward(self, x):
         with torch.no_grad():
             x = self.uniformer_.forward_features(x)
+            gap = torch.nn.AdaptiveAvgPool3d((1, 1, 1))
+            x = gap(x).view(x.shape[0], -1)
         return self.mlp(x)
