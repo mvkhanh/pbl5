@@ -35,7 +35,7 @@ def get_dataloader(abnormal_path, normal_path, batch_size, split_size=None, isTr
         labels = dataset.labels.numpy().flatten()
 
         # Chia tỉ lệ giữ nguyên phân phối class
-        train_idx, val_idx = train_test_split(indices, test_size=split_size, stratify=labels) # 0.3 neu co validation
+        train_idx, val_idx = train_test_split(indices, test_size=split_size, stratify=labels, random_state=42) # 0.3 neu co validation
         train_dataset = Subset(dataset, train_idx)
         val_dataset = Subset(dataset, val_idx)
 
