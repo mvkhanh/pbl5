@@ -4,6 +4,8 @@ import torch.optim as optim
 from torch.utils.tensorboard import SummaryWriter
 import os
 from tqdm import tqdm
+import numpy as np
+from sklearn.metrics import precision_score, recall_score, f1_score
 
 class Trainer:
     def __init__(self, model, train_loader, val_loader, loss_fn, optimizer, device='cuda', epochs=50, patience=7, checkpoint_path="checkpoint.pth", acc_loss_path='acc_loss.txt'):
@@ -52,26 +54,60 @@ class Trainer:
         print(f"🔄 Resuming training from epoch {self.start_epoch}")
 
     def _eval(self):
-        """Đánh giá mô hình trên tập validation."""
+        all_preds = []
+        all_labels = []
+        total_loss = 0
         self.model.eval()
-        total_loss, correct, total = 0, 0, 0
-        with torch.inference_mode():
+        with torch.inference_mode(), torch.autocast(device_type=self.device, dtype=torch.float16):  # ✅ Dùng float16
             for inputs, labels in self.val_loader:
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
                 
-                with torch.autocast(device_type=self.device, dtype=torch.float16):  # ✅ Sử dụng FP16 khi inference
-                    outputs = self.model(inputs)
-                    loss = self.criterion(outputs, labels)
-
+                outputs = self.model(inputs)  # Forward pass
+                
+                # Tính loss
+                loss = self.loss_fn(outputs, labels)
                 total_loss += loss.item()
                 outputs = torch.sigmoid(outputs)
-                preds = (outputs > self.threshold).float()
-                correct += (preds == labels).sum().item()
-                total += labels.size(0)
+                # Chuyển output thành nhãn dự đoán (0 hoặc 1)
+                preds = (outputs > 0.5).float()
+                
+                # Lưu lại dự đoán và nhãn thật
+                all_preds.extend(preds.cpu().numpy())
+                all_labels.extend(labels.cpu().numpy())
 
-        val_loss = total_loss / len(self.val_loader)
-        val_acc = correct / total
-        return val_loss, val_acc
+        # Chuyển về numpy array
+        all_preds = np.array(all_preds).flatten()
+        all_labels = np.array(all_labels).flatten()
+
+        # Tính các chỉ số đánh giá
+        precision = precision_score(all_labels, all_preds)
+        recall = recall_score(all_labels, all_preds)
+        f1 = f1_score(all_labels, all_preds)
+        acc = (all_preds == all_labels).mean() 
+
+        avg_loss = total_loss / len(self.val_loader)
+
+        return avg_loss, acc, precision, recall, f1
+        # """Đánh giá mô hình trên tập validation."""
+        # self.model.eval()
+        # total_loss, correct, total = 0, 0, 0
+        # with torch.inference_mode():
+        #     for inputs, labels in self.val_loader:
+        #         inputs, labels = inputs.to(self.device), labels.to(self.device)
+                
+        #         with torch.autocast(device_type=self.device, dtype=torch.float16):  # ✅ Sử dụng FP16 khi inference
+        #             outputs = self.model(inputs)
+        #             loss = self.criterion(outputs, labels)
+
+        #         total_loss += loss.item()
+        #         outputs = torch.sigmoid(outputs)
+        #         preds = (outputs > self.threshold).float()
+        #         correct += (preds == labels).sum().item()
+        #         total += labels.size(0)
+
+        # val_loss = total_loss / len(self.val_loader)
+        # val_acc = correct / total
+        # return val_loss, val_acc
 
     def train(self):
         """Chạy quá trình huấn luyện."""
