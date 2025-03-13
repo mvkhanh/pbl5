@@ -139,12 +139,12 @@ class Trainer:
 
             train_loss = total_loss / len(self.train_loader)
             train_acc = correct / total
-            val_loss, val_acc = self._eval()
+            val_loss, val_acc, val_precision, val_recall, val_f1 = self._eval()
 
             with open(self.acc_loss_path, 'a') as f:
-                f.write(f'{epoch} {train_loss:.4f} {train_acc:.4f} {val_loss:.4f} {val_acc:.4f}\n')
+                f.write(f'{epoch} {train_loss:.4f} {train_acc:.4f} {val_loss:.4f} {val_acc:.4f} {val_precision:.4f} {val_recall:.4f} {val_f1:.4f}\n')
 
-            print(f"Epoch {epoch+1}/{self.epochs}: Train Loss {train_loss:.4f} | Train Acc {train_acc:.4f} | Val Loss {val_loss:.4f} | Val Acc {val_acc:.4f}")
+            print(f"Epoch {epoch+1}/{self.epochs}: Train Loss {train_loss:.4f} | Train Acc {train_acc:.4f} | Val Loss {val_loss:.4f} | Val Acc {val_acc:.4f} | Val Precision {val_precision:.4f} | Val Recall {val_recall:.4f} | Val F1 {val_f1:.4f}")
 
             self.scheduler.step(val_loss)
 
