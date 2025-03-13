@@ -10,7 +10,7 @@ from model import get_model
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {DEVICE}")
 EPOCHS = 100
-LEARNING_RATE = 5e-5
+LEARNING_RATE = 1e-4
 WEIGHT_DECAY = 0.005
 BATCH_SIZE = 32
 PATIENCE = 5
@@ -29,7 +29,7 @@ if __name__ == '__main__':
     model = get_model().to(DEVICE)
 
     # Train
-    pos_weight = torch.tensor([2.5])  # Tăng trọng số lớp dương
+    pos_weight = torch.tensor([1.5])  # Tăng trọng số lớp dương
     loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight.to(DEVICE))
     trainer = Trainer(model, train_loader, test_loader, loss_fn,
                   optim.Adam(params=model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY), epochs=EPOCHS, device=DEVICE, 
