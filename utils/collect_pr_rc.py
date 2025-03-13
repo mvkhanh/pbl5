@@ -6,7 +6,6 @@ from mymodel import MyModel
 import os
 import numpy as np
 from sklearn.metrics import precision_score, recall_score, f1_score
-from sklearn.metrics import precision_recall_curve
 
 # ---------------------- Cấu hình ----------------------
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -24,7 +23,6 @@ test_abnormal_path = 'UniformerData/Test/Abnormal/'
 def eval1(model, loss_fn, data_loader):
     """Đánh giá mô hình trên tập test và tính Precision, Recall, F1-score."""
     model.eval()
-    correct = 0
     total_loss = 0
     all_preds = []
     all_labels = []
@@ -74,29 +72,19 @@ if __name__ == '__main__':
     if os.path.exists(CHECKPOINT_PATH):
          load_checkpoint(model, CHECKPOINT_PATH)
 
-    all_labels = []
-    probs = []  # Lưu xác suất thay vì nhãn nhị phân
-
     model.eval()
+    
+    all_labels = []
+    all_outputs = []
+
+
     with torch.no_grad():
         for inputs, labels in test_loader:
-            inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
+            inputs = inputs.to(DEVICE)
+            outputs = model(inputs)
+            probs = torch.sigmoid(outputs).cpu().numpy()
+            all_labels.extend(labels.numpy())
+            all_outputs.extend(probs)
 
-            outputs = model(inputs)  # 🔹 Logits
-            prob = torch.sigmoid(outputs)  # ✅ Chuyển logits thành xác suất
-
-            all_labels.extend(labels.cpu().numpy())
-            probs.extend(prob.cpu().numpy())
-
-    # Chuyển sang numpy
-    all_labels = np.array(all_labels)
-    probs = np.array(probs)
-    
-
-    precisions, recalls, thresholds = precision_recall_curve(all_labels, probs)
-    np.save('all_labels.npy', all_labels)
-    np.save('probs.npy', probs)
-    # Tìm threshold có F1-score cao nhất (Precision * Recall lớn nhất)
-    optimal_threshold = thresholds[np.argmax(precisions * recalls)]
-
-    print(f"Optimal threshold: {optimal_threshold:.4f}")
+    # Lưu dữ liệu để vẽ biểu đồ
+    np.savez('precision_recall_data.npz', labels=all_labels, outputs=all_outputs)

@@ -12,7 +12,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {DEVICE}")
 
 BATCH_SIZE = 32
-
+THRESHOLD = 0.5
 CHECKPOINT_PATH = "ckpt/best_model.pth"
 
 test_normal_path = 'UniformerData/Test/NormalVideos/'
@@ -37,7 +37,7 @@ def eval1(model, loss_fn, data_loader):
             total_loss += loss.item()
             outputs = torch.sigmoid(outputs)
             # Chuyển output thành nhãn dự đoán (0 hoặc 1)
-            preds = (outputs > 0.5).float()
+            preds = (outputs > THRESHOLD).float()
             
             # Lưu lại dự đoán và nhãn thật
             all_preds.extend(preds.cpu().numpy())
