@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch.optim as optim
 from mymodel import MyModel
 from Trainer import Trainer
+from model import get_model
 
 # ---------------------- Cấu hình ----------------------
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -25,7 +26,7 @@ if __name__ == '__main__':
     # test_loader = get_dataloader(test_abnormal_path, test_normal_path, batch_size=BATCH_SIZE)
     train_loader, test_loader = get_dataloader(train_abnormal_path, train_normal_path, batch_size=BATCH_SIZE, split_size=0.15)
     # Model
-    model = MyModel().to(DEVICE)
+    model = get_model().to(DEVICE)
 
     # Train
     pos_weight = torch.tensor([35000 / 7500])  # Tăng trọng số lớp dương
