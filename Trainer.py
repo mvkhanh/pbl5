@@ -65,7 +65,7 @@ class Trainer:
                 outputs = self.model(inputs)  # Forward pass
                 
                 # Tính loss
-                loss = self.loss_fn(outputs, labels)
+                loss = self.criterion(outputs, labels)
                 total_loss += loss.item()
                 outputs = torch.sigmoid(outputs)
                 # Chuyển output thành nhãn dự đoán (0 hoặc 1)
