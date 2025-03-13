@@ -29,7 +29,14 @@ def get_model():
     for blk in model.blocks3:
         for param in blk.parameters():
             param.requires_grad = False
-
+    i = 0
+    n = len(model.blocks4) // 2
+    for blk in model.blocks4:
+        if i > n:
+            break
+        i += 1
+        for param in blk.parameters():
+            param.requires_grad = False
     # trainable_params = [name for name, param in model.named_parameters() if param.requires_grad]
     # print("Các tham số sẽ được train:", trainable_params)
     return model
