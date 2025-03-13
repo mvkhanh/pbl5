@@ -88,26 +88,6 @@ class Trainer:
         avg_loss = total_loss / len(self.val_loader)
 
         return avg_loss, acc, precision, recall, f1
-        # """Đánh giá mô hình trên tập validation."""
-        # self.model.eval()
-        # total_loss, correct, total = 0, 0, 0
-        # with torch.inference_mode():
-        #     for inputs, labels in self.val_loader:
-        #         inputs, labels = inputs.to(self.device), labels.to(self.device)
-                
-        #         with torch.autocast(device_type=self.device, dtype=torch.float16):  # ✅ Sử dụng FP16 khi inference
-        #             outputs = self.model(inputs)
-        #             loss = self.criterion(outputs, labels)
-
-        #         total_loss += loss.item()
-        #         outputs = torch.sigmoid(outputs)
-        #         preds = (outputs > self.threshold).float()
-        #         correct += (preds == labels).sum().item()
-        #         total += labels.size(0)
-
-        # val_loss = total_loss / len(self.val_loader)
-        # val_acc = correct / total
-        # return val_loss, val_acc
 
     def train(self):
         """Chạy quá trình huấn luyện."""
