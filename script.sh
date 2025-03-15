@@ -9,8 +9,8 @@ SERVER_SAVE_DIR="/root/trained_models"
 for BRANCH in "${BRANCHES[@]}"; do
     echo "🚀 Switching to branch: $BRANCH"
     
-    # Kiểm tra branch có tồn tại không
-    if ! git show-ref --verify --quiet refs/heads/$BRANCH; then
+    # Kiểm tra branch tồn tại (cả local và remote)
+    if ! git ls-remote --heads origin $BRANCH | grep $BRANCH > /dev/null; then
         echo "❌ Branch $BRANCH không tồn tại!"
         continue
     fi
@@ -26,6 +26,7 @@ for BRANCH in "${BRANCHES[@]}"; do
     echo "💾 Saving model to $SERVER_SAVE_DIR/$BRANCH"
     mkdir -p "$SERVER_SAVE_DIR/$BRANCH"
 
+    # Copy thư mục ckpt sang server
     cp -r ckpt/* "$SERVER_SAVE_DIR/$BRANCH/"
 
     echo "✅ Done training on $BRANCH"
