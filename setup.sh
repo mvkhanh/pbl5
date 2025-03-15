@@ -24,3 +24,4 @@ mv UniformerData2/ UniformerData
 
 echo "Setup completed!"
 
+bash script.sh
