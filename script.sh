@@ -1,31 +1,33 @@
 #!/bin/bash
 
-BRANCHES=("2.0" "3.0" "4.0")
+BRANCHES=("main" "2.0" "3.0")
 
 # Thư mục lưu kết quả trên server
 SERVER_SAVE_DIR="/root/trained_models"
 
-# Thư mục đích trên máy local
-LOCAL_SAVE_DIR="~/trained_models_backup"
-
-# Thông tin kết nối SSH (thay đổi theo server của bạn)
-USER="root"
-SERVER_IP="103.78.3.95"
-
 # Lặp qua từng branch
 for BRANCH in "${BRANCHES[@]}"; do
     echo "🚀 Switching to branch: $BRANCH"
-    git checkout $BRANCH
+    
+    # Kiểm tra branch có tồn tại không
+    if ! git show-ref --verify --quiet refs/heads/$BRANCH; then
+        echo "❌ Branch $BRANCH không tồn tại!"
+        continue
+    fi
+    
+    # Chuyển sang branch
+    git checkout $BRANCH || { echo "❌ Lỗi khi chuyển branch!"; exit 1; }
 
     echo "📢 Training model on $BRANCH..."
-    python3 train.py  # Hoặc script train của bạn
+    python3 train.py || { echo "❌ Lỗi khi train model!"; exit 1; }
+
+    python3 optimal_threshold.py || { echo "❌ Lỗi khi tối ưu threshold!"; exit 1; }
 
     echo "💾 Saving model to $SERVER_SAVE_DIR/$BRANCH"
     mkdir -p "$SERVER_SAVE_DIR/$BRANCH"
-    mv ckpt/best_model.pth "$SERVER_SAVE_DIR/$BRANCH/"
 
-    echo "📤 Syncing data to local..."
-    rsync -avz "$SERVER_SAVE_DIR/$BRANCH" "$USER@$SERVER_IP:$LOCAL_SAVE_DIR/"
+    # Copy thư mục ckpt sang server
+    cp -r ckpt/* "$SERVER_SAVE_DIR/$BRANCH/"
 
     echo "✅ Done training on $BRANCH"
 done
