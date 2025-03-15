@@ -9,3 +9,4 @@ timm
 gdown
 scikit-learn
 tensorboard
+matplotlib
