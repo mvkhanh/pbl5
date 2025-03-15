@@ -14,11 +14,9 @@ class UCFCrimeDataset(Dataset):
         self.abnormal = get_all_videopaths(abnormal_path)
         self.normal = get_all_videopaths(normal_path)
 
-        self.data = None
-        self.labels = None
-
-        # Mặc định: Lấy random normal lúc init
-        self._sample_normal()
+        self.data = np.concatenate((self.abnormal, self.normal), axis=0)
+        self.labels = np.concatenate((np.ones(len(self.abnormal)), np.zeros(len(self.normal))), axis=0)
+        self.labels = torch.tensor(self.labels, dtype=torch.float32).unsqueeze(1)
 
     def _sample_normal(self):
         # Mỗi lần gọi sẽ lấy ngẫu nhiên len(abnormal) từ normal
