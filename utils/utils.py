@@ -63,3 +63,15 @@ def get_all_videopaths(path):
             paths.extend(l)
     return paths
 
+import matplotlib.pyplot as plt
+from sklearn.metrics import precision_recall_curve
+
+def plot_precision_recall_curve(all_labels, probs):
+    precisions, recalls, thresholds = precision_recall_curve(all_labels, probs)
+    
+    plt.plot(recalls, precisions, marker='.')
+    plt.xlabel('Recall')
+    plt.ylabel('Precision')
+    plt.title('Precision-Recall Curve')
+    plt.grid(True)
+    plt.show()
