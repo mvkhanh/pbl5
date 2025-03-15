@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import precision_recall_curve
 
 # Load dữ liệu từ server
-data = np.load('precision_recall_data.npz')
+data = np.load('../precision_recall_data.npz')
 labels = data['labels']
 outputs = data['outputs']
 
