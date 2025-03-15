@@ -29,8 +29,7 @@ if __name__ == '__main__':
     model = get_model().to(DEVICE)
 
     # Train
-    pos_weight = torch.tensor([1.5])  # Tăng trọng số lớp dương
-    loss_fn = nn.BCEWithLogitsLoss(pos_weight=pos_weight.to(DEVICE))
+    loss_fn = nn.BCEWithLogitsLoss()
     trainer = Trainer(model, train_loader, test_loader, loss_fn,
                   optim.Adam(params=model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY), epochs=EPOCHS, device=DEVICE, 
                   patience=PATIENCE, checkpoint_path=CHECKPOINT_PATH)
