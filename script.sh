@@ -26,7 +26,6 @@ for BRANCH in "${BRANCHES[@]}"; do
     echo "💾 Saving model to $SERVER_SAVE_DIR/$BRANCH"
     mkdir -p "$SERVER_SAVE_DIR/$BRANCH"
 
-    # Copy thư mục ckpt sang server
     cp -r ckpt/* "$SERVER_SAVE_DIR/$BRANCH/"
 
     echo "✅ Done training on $BRANCH"
