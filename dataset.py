@@ -40,7 +40,7 @@ class UCFCrimeDataset(Dataset):
         video_tensor = video_to_tensor(self.data[index])
         return video_tensor, self.labels[index]
 
-def get_dataloader(abnormal_path, normal_path, batch_size, split_size=None, isTrain=False):
+def get_dataloader(abnormal_path, normal_path, batch_size, split_size=None, isTrain=True):
     num_workers = os.cpu_count() // 2
 
     if isTrain:
