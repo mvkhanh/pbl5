@@ -13,7 +13,7 @@ DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {DEVICE}")
 
 BATCH_SIZE = 32
-
+THRESHOLD = 0.5
 CHECKPOINT_PATH = "ckpt/best_model.pth"
 
 train_abnormal_path = 'UniformerData/Train/Abnormal/'
@@ -40,7 +40,7 @@ def eval1(model, loss_fn, data_loader):
             total_loss += loss.item()
             outputs = torch.sigmoid(outputs)
             # Chuyển output thành nhãn dự đoán (0 hoặc 1)
-            preds = (outputs > 0.5).float()
+            preds = (outputs > optimal_threshold).float()
             
             # Lưu lại dự đoán và nhãn thật
             all_preds.extend(preds.cpu().numpy())
@@ -94,9 +94,19 @@ if __name__ == '__main__':
     
 
     precisions, recalls, thresholds = precision_recall_curve(all_labels, probs)
-    np.save('all_labels.npy', all_labels)
-    np.save('probs.npy', probs)
+    np.save('ckpt/all_labels.npy', all_labels)
+    np.save('ckpt/probs.npy', probs)
     # Tìm threshold có F1-score cao nhất (Precision * Recall lớn nhất)
     optimal_threshold = thresholds[np.argmax(precisions * recalls)]
 
     print(f"Optimal threshold: {optimal_threshold:.4f}")
+    with open('ckpt/optimal_threshold.txt', 'w') as f:
+        f.write(str(optimal_threshold))
+        
+    THRESHOLD = optimal_threshold
+    test_loader = get_dataloader(test_abnormal_path, test_normal_path, batch_size=BATCH_SIZE)
+    loss_fn = nn.BCEWithLogitsLoss()
+    test_loss, test_acc, precision, recall, test_f1_score = eval1(model, loss_fn, test_loader)
+    with open('ckpt/result.txt', 'w') as f:
+        f.write(f'Test loss: {test_loss:.4f} | Test accuracy: {test_acc:.4f} | Precision: {precision} | Recall: {recall} | F1 score: {test_f1_score}')
+    print(f'Test loss: {test_loss:.4f} | Test accuracy: {test_acc:.4f} | Precision: {precision} | Recall: {recall} | F1 score: {test_f1_score}')
