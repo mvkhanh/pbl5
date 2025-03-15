@@ -9,7 +9,7 @@ from model import get_model
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {DEVICE}")
 EPOCHS = 100
-LEARNING_RATE = 1e-4
+LEARNING_RATE = 5e-4
 WEIGHT_DECAY = 0.005
 BATCH_SIZE = 45
 PATIENCE = 7
