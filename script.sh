@@ -9,8 +9,8 @@ SERVER_SAVE_DIR="/root/trained_models"
 for BRANCH in "${BRANCHES[@]}"; do
     echo "🚀 Switching to branch: $BRANCH"
     
-    # Kiểm tra branch có tồn tại không
-    if ! git show-ref --verify --quiet refs/heads/$BRANCH; then
+    # Kiểm tra branch tồn tại (cả local và remote)
+    if ! git ls-remote --heads origin $BRANCH | grep $BRANCH > /dev/null; then
         echo "❌ Branch $BRANCH không tồn tại!"
         continue
     fi
