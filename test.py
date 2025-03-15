@@ -63,7 +63,7 @@ def load_checkpoint(model, checkpoint_path):
         print(f"🔄 Load successfully!")
 
 if __name__ == '__main__':
-    test_loader = get_dataloader(test_abnormal_path, test_normal_path, batch_size=BATCH_SIZE, isTrain=False)
+    test_loader = get_dataloader(test_abnormal_path, test_normal_path, batch_size=BATCH_SIZE)
     # Model
     model = get_model().to(DEVICE)
 
