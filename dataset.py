@@ -63,7 +63,7 @@ def get_dataloader(abnormal_path, normal_path, batch_size, split_size=None, isTr
         # Tạo tập con train & val
         train_subset = Subset(full_train_dataset, train_idx)
         val_subset = Subset(val_dataset, val_idx)
-
+        print(f"Train size: {len(train_subset)}, Val size: {len(val_subset)}")
         train_loader = DataLoader(train_subset, batch_size=batch_size, shuffle=True, num_workers=num_workers)
         val_loader = DataLoader(val_subset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
