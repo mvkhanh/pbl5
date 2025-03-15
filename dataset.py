@@ -6,12 +6,14 @@ import torch
 import numpy as np
 from torch.utils.data import Dataset
 from utils.utils import get_all_videopaths, video_to_tensor
+import random
 
 class UCFCrimeDataset(Dataset):
     def __init__(self, abnormal_path, normal_path):
         super().__init__()
         abnormal = get_all_videopaths(abnormal_path)
         normal = get_all_videopaths(normal_path)
+        normal = random.sample(normal, len(abnormal))
 
         self.data = np.concatenate((abnormal, normal), axis=0)
         self.labels = np.concatenate((np.ones(len(abnormal)), np.zeros(len(normal))), axis=0)
