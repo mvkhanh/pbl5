@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Clone repository
-echo "Cloning repository..."
-git clone https://github.com/mvkhanh/pbl5.git
-cd pbl5
+# echo "Cloning repository..."
+# git clone https://github.com/mvkhanh/pbl5.git
+# cd pbl5
 
 echo "Installing Python dependencies..."
 pip3 install -r requirements.txt
