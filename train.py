@@ -2,7 +2,6 @@ from dataset import get_dataloader
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from mymodel import MyModel
 from Trainer import Trainer
 from model import get_model
 
