@@ -30,7 +30,7 @@ def load_checkpoint(model, checkpoint_path):
 if __name__ == '__main__':
     train_loader, test_loader = get_dataloader(train_abnormal_path, train_normal_path, batch_size=BATCH_SIZE, split_size=0.15)
     # Model
-    model = MyModel().to(DEVICE)
+    model = get_model().to(DEVICE)
 
     if os.path.exists(CHECKPOINT_PATH):
          load_checkpoint(model, CHECKPOINT_PATH)

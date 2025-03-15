@@ -6,11 +6,12 @@ import os
 import numpy as np
 from utils.utils import video_to_tensor
 import cv2
+from time import time
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {DEVICE}")
-CHECKPOINT_PATH = "ckpt/best_model.pth"
-THRESHOLD = 0.5
+CHECKPOINT_PATH = "ckpt/best_model2.pth"
+THRESHOLD = 0.4856
 
 test_path = 'UniformerData/Test'
 
@@ -19,20 +20,22 @@ def load_checkpoint(model, checkpoint_path):
         checkpoint = torch.load(checkpoint_path, map_location=DEVICE)
         model.load_state_dict(checkpoint['model_state'])
         print(f"🔄 Load successfully!")
-
-
+#Abnormal/Explosion016_x264_5fps_0000.mp4
+#Abnormal/Shooting032_x264_5fps_0042.mp4
 if __name__ == '__main__':
     # Model
     model = get_model().to(DEVICE)
-
+    path = 'UniformerData/Test/Abnormal/Explosion016_x264_5fps_0000.mp4'
     if os.path.exists(CHECKPOINT_PATH):
         load_checkpoint(model, CHECKPOINT_PATH)
 
     model.eval()
     with torch.no_grad():
-        video_path = os.path.join(test_path, 'NormalVideos/Normal_Videos_003_x264_5fps_0003.mp4')
+        video_path = os.path.join(path)
         tensor = video_to_tensor(video_path).unsqueeze(0)
+        t1 = time()
         output = torch.sigmoid(model(tensor)).item()
+        print(time() - t1)
         anomaly_text = f"Anomaly Probability: {output:.4f}"
         if output > THRESHOLD:
             anomaly_text += " | Pham phap!"
