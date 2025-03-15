@@ -20,5 +20,7 @@ echo "Reinstalling PyTorch..."
 pip3 uninstall torch torchvision torchaudio -y
 pip3 install torch torchvision torchaudio
 
+mv UniformerData2/ UniformerData
+
 echo "Setup completed!"
 
