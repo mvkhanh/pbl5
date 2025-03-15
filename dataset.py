@@ -12,7 +12,12 @@ class UCFCrimeDataset(Dataset):
         self.abnormal = get_all_videopaths(abnormal_path)
         self.normal = get_all_videopaths(normal_path)
         self.resample = resample
-        self._update_data()
+        self.data = np.concatenate((self.abnormal, self.normal), axis=0)
+        self.labels = np.concatenate((np.ones(len(self.abnormal)), np.zeros(len(sampled_normal))), axis=0)
+
+        # Chuyển labels sang tensor
+        self.labels = torch.tensor(self.labels, dtype=torch.float32).unsqueeze(1)
+        # self._update_data()
 
     def _update_data(self):
         if self.resample:
