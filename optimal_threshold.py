@@ -103,7 +103,7 @@ if __name__ == '__main__':
         f.write(str(optimal_threshold))
         
     THRESHOLD = optimal_threshold
-    test_loader = get_dataloader(test_abnormal_path, test_normal_path, batch_size=BATCH_SIZE, isTrain=False)
+    test_loader = get_dataloader(test_abnormal_path, test_normal_path, batch_size=BATCH_SIZE)
     loss_fn = nn.BCEWithLogitsLoss()
     test_loss, test_acc, precision, recall, test_f1_score = eval1(model, loss_fn, test_loader)
     with open('ckpt/result.txt', 'w') as f:
