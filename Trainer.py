@@ -96,7 +96,7 @@ class Trainer:
         for epoch in range(self.start_epoch, self.epochs):
             self.model.train()
             total_loss, correct, total = 0, 0, 0
-            self.train_loader.dataset.dataset._sample_normal()
+            self.train_loader.dataset.dataset.resample_data()
             with tqdm(total=len(self.train_loader), desc=f"Epoch {epoch+1}/{self.epochs}", unit="batch") as pbar:
                 for inputs, labels in self.train_loader:
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
