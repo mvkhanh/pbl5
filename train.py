@@ -23,7 +23,7 @@ test_abnormal_path = 'UniformerData/Test/Abnormal/'
 if __name__ == '__main__':
     # train_loader = get_dataloader(train_abnormal_path, train_normal_path, batch_size=BATCH_SIZE, isTrain=True)
     # test_loader = get_dataloader(test_abnormal_path, test_normal_path, batch_size=BATCH_SIZE)
-    train_loader, test_loader, _ = get_dataloader(train_abnormal_path, train_normal_path, batch_size=BATCH_SIZE, split_size=0.15)
+    train_loader, test_loader = get_dataloader(train_abnormal_path, train_normal_path, batch_size=BATCH_SIZE, split_size=0.15)
     # Model
     model = get_model().to(DEVICE)
 
