@@ -129,14 +129,14 @@ class Trainer:
             self.scheduler.step(val_loss)
 
             # 💾 Lưu checkpoint nếu tốt nhất
-            if val_loss < self.best_val_loss:
-                self.best_val_loss = val_loss
-                self._save_checkpoint(epoch, val_loss)
-                early_stopping_counter = 0
-            else:
-                early_stopping_counter += 1
-
+            # if val_loss < self.best_val_loss:
+            #     self.best_val_loss = val_loss
+            #     self._save_checkpoint(epoch, val_loss)
+            #     early_stopping_counter = 0
+            # else:
+            #     early_stopping_counter += 1
+            self._save_checkpoint(epoch, val_loss)
             # ⛔ Early stopping
-            if early_stopping_counter >= self.patience:
-                print("⛔ Early stopping triggered!")
-                break
+            # if early_stopping_counter >= self.patience:
+            #     print("⛔ Early stopping triggered!")
+            #     break
