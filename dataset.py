@@ -1,6 +1,5 @@
 import numpy as np
-from sklearn.model_selection import train_test_split
-from torch.utils.data import DataLoader, Subset
+from torch.utils.data import DataLoader
 import os
 import torch
 from torch.utils.data import Dataset
@@ -29,6 +28,7 @@ class UCFCrimeDataset(Dataset):
         self.sampled_normals = random.sample(self.normal, len(self.abnormal))
         self.data = np.concatenate((self.abnormal, self.sampled_normals), axis=0)
         self.labels = np.concatenate((np.ones(len(self.abnormal)), np.zeros(len(self.sampled_normals))), axis=0)
+        
         indices = np.random.permutation(len(self.data))
         self.data = self.data[indices]
         self.labels = self.labels[indices]
