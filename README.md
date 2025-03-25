@@ -15,9 +15,9 @@
 
 ### ⏳ Training Time on RTX 3090 (16GB VRAM)
 
-| Batch Size | Time per Batch | Total Batches | Estimated Training Time |
+| Batch Size | Time per Batch | Total Batches | Estimated Training Time per Epoch |
 |------------|--------------|---------------|-------------------------|
-| **32** | 4.7s | 1818 | ~2.37h |
+| **45** | 2.58s | 287 | ~12m |
 
 ---
 
