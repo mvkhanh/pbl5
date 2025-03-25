@@ -28,7 +28,7 @@ class UCFCrimeDataset(Dataset):
         # Lấy ngẫu nhiên 1 phần normal bằng với abnormal
         self.sampled_normals = random.sample(self.normal, len(self.abnormal))
         self.data = np.concatenate((self.abnormal, self.sampled_normals), axis=0)
-        self.data = np.random.shuffle(self.data)
+        # self.data = np.random.shuffle(self.data)
         self.labels = np.concatenate((np.ones(len(self.abnormal)), np.zeros(len(self.sampled_normals))), axis=0)
         self.labels = torch.tensor(self.labels, dtype=torch.float32).unsqueeze(1)
 
