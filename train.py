@@ -5,6 +5,7 @@ import torch.optim as optim
 from Trainer import Trainer
 from model import get_model
 import argparse
+import os
 
 # ---------------------- Cấu hình ----------------------
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -18,13 +19,13 @@ CHECKPOINT_PATH = "ckpt/best_model.pth"
 # LOG_DIR = "logs"
 train_path = 'UniformerData/Train/'
 val_path = 'UniformerData/Validation/'
-
+os.makedirs('ckpt', exist_ok=True)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('version', help='Choose 1, 2, 3')
+    parser.add_argument('version', help='Choose 1, 2, 3', default=1)
     args = parser.parse_args()
-
+    
     train_loader = get_dataloader(train_path, batch_size=BATCH_SIZE, isTrain=True)
     val_loader = get_dataloader(val_path, BATCH_SIZE)
     # Model

@@ -7,7 +7,7 @@ import numpy as np
 from sklearn.metrics import precision_score, recall_score, f1_score
 
 class Trainer:
-    def __init__(self, model, train_loader, val_loader, loss_fn, optimizer, device='cuda', epochs=50, patience=7, checkpoint_path="checkpoint.pth", acc_loss_path='acc_loss.txt'):
+    def __init__(self, model, train_loader, val_loader, loss_fn, optimizer, device='cuda', epochs=50, patience=7, checkpoint_path="checkpoint.pth", acc_loss_path='ckpt/acc_loss.txt'):
         self.model = model.to(device)
         self.train_loader = train_loader
         self.val_loader = val_loader

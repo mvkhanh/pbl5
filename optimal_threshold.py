@@ -66,7 +66,7 @@ def load_checkpoint(model, checkpoint_path):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('version', help='Choose 1, 2, 3')
+    parser.add_argument('version', help='Choose 1, 2, 3', default=1)
     args = parser.parse_args()
     
     val_loader = get_dataloader(val_path, batch_size=BATCH_SIZE)
