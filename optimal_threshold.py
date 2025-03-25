@@ -14,7 +14,6 @@ print(f"Using device: {DEVICE}")
 
 BATCH_SIZE = 32
 THRESHOLD = 0.5
-CHECKPOINT_PATH = "ckpt/best_model.pth"
 
 test_path = 'UniformerData/Test/'
 val_path = 'UniformerData/Validation/'
@@ -68,11 +67,12 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('version', help='Choose 1, 2, 3', default=1)
     args = parser.parse_args()
+    version = int(args.version)
     
     val_loader = get_dataloader(val_path, batch_size=BATCH_SIZE)
     # Model
-    model = get_model(int(args.version)).to(DEVICE)
-
+    model = get_model(version).to(DEVICE)
+    CHECKPOINT_PATH = os.path.join(f"model{version}/best_model.pth")
     if os.path.exists(CHECKPOINT_PATH):
          load_checkpoint(model, CHECKPOINT_PATH)
 
@@ -96,19 +96,19 @@ if __name__ == '__main__':
     
 
     precisions, recalls, thresholds = precision_recall_curve(all_labels, probs)
-    np.save('ckpt/all_labels.npy', all_labels)
-    np.save('ckpt/probs.npy', probs)
+    np.save(f'model{version}/all_labels.npy', all_labels)
+    np.save(f'model{version}/probs.npy', probs)
     # Tìm threshold có F1-score cao nhất (Precision * Recall lớn nhất)
     optimal_threshold = thresholds[np.argmax(precisions * recalls)]
 
     print(f"Optimal threshold: {optimal_threshold:.4f}")
-    with open('ckpt/result.txt', 'a') as f:
+    with open(f'model{version}/result.txt', 'a') as f:
         f.write(f'Optimal threshold: {optimal_threshold}\n')
         
     THRESHOLD = optimal_threshold
     test_loader = get_dataloader(test_path, batch_size=BATCH_SIZE)
     loss_fn = nn.BCEWithLogitsLoss()
     test_loss, test_acc, precision, recall, test_f1_score = eval1(model, loss_fn, test_loader)
-    with open('ckpt/result.txt', 'a') as f:
+    with open(f'model{version}/result.txt', 'a') as f:
         f.write(f'Test loss: {test_loss:.4f} | Test accuracy: {test_acc:.4f} | Precision: {precision} | Recall: {recall} | F1 score: {test_f1_score}\n')
     print(f'Test loss: {test_loss:.4f} | Test accuracy: {test_acc:.4f} | Precision: {precision} | Recall: {recall} | F1 score: {test_f1_score}')
