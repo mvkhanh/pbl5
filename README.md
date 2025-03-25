@@ -37,9 +37,8 @@
 
 | File | Description |
 |------|-------------|
-| `ckpt/best_model.pth` | Best model parameters |
-| `ckpt/optimal_threshold.txt` | Optimal threshold for test set |
-| `ckpt/alllabel-props` | Precision-Recall curve data for validation set |
+| `best_model.pth` | Best model parameters |
+| `alllabel-props` | Precision-Recall curve data for validation set |
 | `acc_loss.txt` | Logs of train/validation accuracy and loss |
 | `result.txt` | Result on test set with optimal threshold |
 
