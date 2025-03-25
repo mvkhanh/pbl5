@@ -1,21 +1,47 @@
-Link data gốc:
-https://www.dropbox.com/scl/fo/2aczdnx37hxvcfdo4rq4q/AOjRokSTaiKxXmgUyqdcI6k?e=2&preview=Training-Normal-Videos-Part-2.zip&rlkey=5bg7mxxbq46t7aujfch46dlvz&st=2wrec7lu&dl=1
+# Training Report for Human Action Recognition
 
+## 📂 Dataset  
+- **Source:** [Download Here](https://www.dropbox.com/scl/fo/2aczdnx37hxvcfdo4rq4q/AOjRokSTaiKxXmgUyqdcI6k?rlkey=5bg7mxxbq46t7aujfch46dlvz&e=NaN)
 
-#
-P40 bacth: 16, 4.7s/batch, train: 1818 batch => 2.37h
-    batch: 30, 8.5s/batch, train: 970 batch => 2.3h ~~same
+---
 
+## 🛠 Training Configurations  
 
-1.0: Normal -> overfit
-2.0: frozen all + MLP
-3.0: No frozen, no pretrain, no mlp
+| Model Version | Description |
+|--------------|-------------|
+| **1.0** | Unforzen half of last block |
+| **2.0** | Unfrozen last block |
+| **3.0** | Unfrozen all |
 
-Test loss: 0.4028 | Test accuracy: 0.8359 | Precision: 0.6756756756756757 | Recall: 0.03753753753753754 | F1 score: 0.07112375533428165
-4.0: frozon half, no mlp
+### ⏳ Training Time on RTX 3090 (16GB VRAM)
 
-ckpt/best_model.pth: tham số tốt nhất
-ckpt/optimal_threshold.txt: Ngưỡng tối ưu, kết quả chạy ngưỡng tối ưu trên tập test
-ckpt/alllabel-props: để vẽ precision-recall curve trên tập val
-acc_loss.txt: Log accuracy và loss của train và validation trong quá trình huấn luyện
+| Batch Size | Time per Batch | Total Batches | Estimated Training Time |
+|------------|--------------|---------------|-------------------------|
+| **32** | 4.7s | 1818 | ~2.37h |
+
+---
+
+## 📊 Test Results (Version 3.0)  
+
+| Metric | Value |
+|--------|------|
+| **Test Loss** | `0.4028` |
+| **Test Accuracy** | `0.8359` |
+| **Precision** | `0.6757` |
+| **Recall** | `0.0375` |
+| **F1 Score** | `0.0711` |
+
+---
+
+## 📁 Checkpoints and Logs  
+
+| File | Description |
+|------|-------------|
+| `ckpt/best_model.pth` | Best model parameters |
+| `ckpt/optimal_threshold.txt` | Optimal threshold for test set |
+| `ckpt/alllabel-props` | Precision-Recall curve data for validation set |
+| `acc_loss.txt` | Logs of train/validation accuracy and loss |
+| `result.txt` | Result on test set with optimal threshold |
+
+### 📈 Log Format (`acc_loss.txt`)
 Epoch TrainLoss TrainAcc ValLoss ValAcc ValPrecision ValRecall ValF1
