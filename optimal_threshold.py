@@ -6,6 +6,7 @@ import os
 import numpy as np
 from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.metrics import precision_recall_curve
+import argparse
 
 # ---------------------- Cấu hình ----------------------
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -64,9 +65,13 @@ def load_checkpoint(model, checkpoint_path):
         print(f"🔄 Load successfully!")
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('version', help='Choose 1, 2, 3')
+    args = parser.parse_args()
+    
     val_loader = get_dataloader(val_path, batch_size=BATCH_SIZE)
     # Model
-    model = get_model().to(DEVICE)
+    model = get_model(int(args.version)).to(DEVICE)
 
     if os.path.exists(CHECKPOINT_PATH):
          load_checkpoint(model, CHECKPOINT_PATH)

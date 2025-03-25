@@ -10,8 +10,8 @@ import random
 class UCFCrimeDataset(Dataset):
     def __init__(self, path, isTrain):
         super().__init__()
-        abnormal_path = os.path.join('Abnormal')
-        normal_path = os.path.join('NormalVideos')
+        abnormal_path = os.path.join(path, 'Abnormal')
+        normal_path = os.path.join(path, 'NormalVideos')
         self.abnormal = get_all_videopaths(abnormal_path)
         self.normal = get_all_videopaths(normal_path)
         self.isTrain = isTrain
