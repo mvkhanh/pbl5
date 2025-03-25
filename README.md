@@ -13,3 +13,9 @@ P40 bacth: 16, 4.7s/batch, train: 1818 batch => 2.37h
 
 Test loss: 0.4028 | Test accuracy: 0.8359 | Precision: 0.6756756756756757 | Recall: 0.03753753753753754 | F1 score: 0.07112375533428165
 4.0: frozon half, no mlp
+
+ckpt/best_model.pth: tham số tốt nhất
+ckpt/optimal_threshold.txt: Ngưỡng tối ưu, kết quả chạy ngưỡng tối ưu trên tập test
+ckpt/alllabel-props: để vẽ precision-recall curve trên tập val
+acc_loss.txt: Log accuracy và loss của train và validation trong quá trình huấn luyện
+Epoch TrainLoss TrainAcc ValLoss ValAcc ValPrecision ValRecall ValF1

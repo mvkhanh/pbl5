@@ -1,7 +1,6 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from torch.utils.tensorboard import SummaryWriter
 import os
 from tqdm import tqdm
 import numpy as np
@@ -97,7 +96,7 @@ class Trainer:
             self.model.train()
             total_loss, correct, total = 0, 0, 0
             with tqdm(total=len(self.train_loader), desc=f"Epoch {epoch+1}/{self.epochs}", unit="batch") as pbar:
-                self.train_loader.dataset.dataset.resample_data()
+                self.train_loader.dataset.resample_data()
                 for inputs, labels in self.train_loader:
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
 

@@ -15,10 +15,8 @@ BATCH_SIZE = 32
 THRESHOLD = 0.5
 CHECKPOINT_PATH = "ckpt/best_model.pth"
 
-train_abnormal_path = 'UniformerData/Train/Abnormal/'
-train_normal_path = 'UniformerData/Train/NormalVideos/'
-test_normal_path = 'UniformerData/Test/NormalVideos/'
-test_abnormal_path = 'UniformerData/Test/Abnormal/'
+test_path = 'UniformerData/Test/'
+val_path = 'UniformerData/Validation/'
 
 def eval1(model, loss_fn, data_loader):
     """Đánh giá mô hình trên tập test và tính Precision, Recall, F1-score."""
@@ -66,7 +64,7 @@ def load_checkpoint(model, checkpoint_path):
         print(f"🔄 Load successfully!")
 
 if __name__ == '__main__':
-    train_loader, test_loader = get_dataloader(train_abnormal_path, train_normal_path, batch_size=BATCH_SIZE, split_size=0.15)
+    val_loader = get_dataloader(val_path, batch_size=BATCH_SIZE)
     # Model
     model = get_model().to(DEVICE)
 
@@ -78,7 +76,7 @@ if __name__ == '__main__':
 
     model.eval()
     with torch.no_grad():
-        for inputs, labels in test_loader:
+        for inputs, labels in val_loader:
             inputs, labels = inputs.to(DEVICE), labels.to(DEVICE)
 
             outputs = model(inputs)  # 🔹 Logits
@@ -99,13 +97,13 @@ if __name__ == '__main__':
     optimal_threshold = thresholds[np.argmax(precisions * recalls)]
 
     print(f"Optimal threshold: {optimal_threshold:.4f}")
-    with open('ckpt/optimal_threshold.txt', 'w') as f:
-        f.write(str(optimal_threshold))
+    with open('ckpt/result.txt', 'a') as f:
+        f.write(f'Optimal threshold: {optimal_threshold}\n')
         
     THRESHOLD = optimal_threshold
-    test_loader = get_dataloader(test_abnormal_path, test_normal_path, batch_size=BATCH_SIZE)
+    test_loader = get_dataloader(test_path, batch_size=BATCH_SIZE)
     loss_fn = nn.BCEWithLogitsLoss()
     test_loss, test_acc, precision, recall, test_f1_score = eval1(model, loss_fn, test_loader)
-    with open('ckpt/result.txt', 'w') as f:
-        f.write(f'Test loss: {test_loss:.4f} | Test accuracy: {test_acc:.4f} | Precision: {precision} | Recall: {recall} | F1 score: {test_f1_score}')
+    with open('ckpt/result.txt', 'a') as f:
+        f.write(f'Test loss: {test_loss:.4f} | Test accuracy: {test_acc:.4f} | Precision: {precision} | Recall: {recall} | F1 score: {test_f1_score}\n')
     print(f'Test loss: {test_loss:.4f} | Test accuracy: {test_acc:.4f} | Precision: {precision} | Recall: {recall} | F1 score: {test_f1_score}')

@@ -14,8 +14,7 @@ BATCH_SIZE = 32
 THRESHOLD = 0.5
 CHECKPOINT_PATH = "ckpt/best_model.pth"
 
-test_normal_path = 'UniformerData/Test/NormalVideos/'
-test_abnormal_path = 'UniformerData/Test/Abnormal/'
+test_path = 'UniformerData/Test/'
 
 def eval1(model, loss_fn, data_loader):
     """Đánh giá mô hình trên tập test và tính Precision, Recall, F1-score."""
@@ -63,7 +62,7 @@ def load_checkpoint(model, checkpoint_path):
         print(f"🔄 Load successfully!")
 
 if __name__ == '__main__':
-    test_loader = get_dataloader(test_abnormal_path, test_normal_path, batch_size=BATCH_SIZE)
+    test_loader = get_dataloader(test_path, batch_size=BATCH_SIZE)
     # Model
     model = get_model().to(DEVICE)
 

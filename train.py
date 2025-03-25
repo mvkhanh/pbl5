@@ -15,21 +15,19 @@ BATCH_SIZE = 45
 PATIENCE = 7
 CHECKPOINT_PATH = "ckpt/best_model.pth"
 # LOG_DIR = "logs"
-train_abnormal_path = 'UniformerData/Train/Abnormal/'
-train_normal_path = 'UniformerData/Train/NormalVideos/'
-test_normal_path = 'UniformerData/Test/NormalVideos/'
-test_abnormal_path = 'UniformerData/Test/Abnormal/'
+train_path = 'UniformerData/Train/'
+val_path = 'UniformerData/Validation/'
+
 
 if __name__ == '__main__':
-    # train_loader = get_dataloader(train_abnormal_path, train_normal_path, batch_size=BATCH_SIZE, isTrain=True)
-    # test_loader = get_dataloader(test_abnormal_path, test_normal_path, batch_size=BATCH_SIZE)
-    train_loader, test_loader = get_dataloader(train_abnormal_path, train_normal_path, batch_size=BATCH_SIZE, split_size=0.15)
+    train_loader = get_dataloader(train_path, batch_size=BATCH_SIZE, isTrain=True)
+    val_loader = get_dataloader(val_path, BATCH_SIZE)
     # Model
     model = get_model().to(DEVICE)
 
     # Train
     loss_fn = nn.BCEWithLogitsLoss()
-    trainer = Trainer(model, train_loader, test_loader, loss_fn,
+    trainer = Trainer(model, train_loader, val_loader, loss_fn,
                   optim.Adam(params=model.parameters(), lr=LEARNING_RATE, weight_decay=WEIGHT_DECAY), epochs=EPOCHS, device=DEVICE, 
                   patience=PATIENCE, checkpoint_path=CHECKPOINT_PATH)
     trainer.train()
