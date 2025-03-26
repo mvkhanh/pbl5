@@ -5,6 +5,7 @@ import os
 from tqdm import tqdm
 import numpy as np
 from sklearn.metrics import precision_score, recall_score, f1_score
+from inputimeout import inputimeout, TimeoutOccurred
 
 class Trainer:
     def __init__(self, model, train_loader, val_loader, loss_fn, optimizer, device='cuda', epochs=50, patience=7, checkpoint_path="checkpoint.pth", acc_loss_path='ckpt/acc_loss.txt'):
@@ -120,7 +121,12 @@ class Trainer:
 
             train_loss = total_loss / len(self.train_loader)
             train_acc = correct / total
-            if epoch % self.eval_after == 0:
+            try:
+                st = inputimeout('Save checkpoints?[y/n]', 15)
+            except TimeoutOccurred:
+                st = 'n'
+                
+            if epoch % self.eval_after == 0 or st == 'y':
                 val_loss, val_acc, val_precision, val_recall, val_f1 = self._eval()
 
                 with open(self.acc_loss_path, 'a') as f:
