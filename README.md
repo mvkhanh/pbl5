@@ -13,7 +13,7 @@
 | **2.0** | Unfrozen last block |
 | **3.0** | Unfrozen all |
 
-### ⏳ Training Time on RTX 3090 (16GB VRAM)
+### ⏳ Training Time on RTX 3090 (24GB VRAM)
 
 | Batch Size | Time per Batch | Total Batches | Estimated Training Time per Epoch |
 |------------|--------------|---------------|-------------------------|
