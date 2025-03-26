@@ -11,7 +11,7 @@ import os
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {DEVICE}")
 EPOCHS = 100
-LEARNING_RATE = 1e-3
+LEARNING_RATE = 5e-3
 WEIGHT_DECAY = 0.005
 BATCH_SIZE = 45
 PATIENCE = 7
