@@ -1,11 +1,11 @@
-# Training Report for Human Action Recognition
+# Real-Time Weakly Supervised Video Anomaly Detection
 
 ## 📂 Dataset  
 - **Source:** [Download Here](https://www.dropbox.com/scl/fo/2aczdnx37hxvcfdo4rq4q/AOjRokSTaiKxXmgUyqdcI6k?rlkey=5bg7mxxbq46t7aujfch46dlvz&e=NaN)
 
 ---
 
-## 🛠 Training Configurations  
+## 🛠 Training Configurations (Uniformer32)
 
 | Model Version | Description |
 |--------------|-------------|
