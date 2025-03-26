@@ -12,7 +12,7 @@ import argparse
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 print(f"Using device: {DEVICE}")
 
-BATCH_SIZE = 16
+BATCH_SIZE = 32
 THRESHOLD = 0.5
 
 test_path = 'UniformerData/Test/'
