@@ -22,7 +22,8 @@ class Trainer:
         self.threshold = 0.5
         self.scheduler = optim.lr_scheduler.ReduceLROnPlateau(self.optimizer, mode='min', patience=3, factor=0.5)
         self.scaler = torch.amp.GradScaler('cuda')  # ✅ Thêm GradScaler cho AMP
-
+        self.eval_after = 3
+        
         # 🟢 Kiểm tra checkpoint có tồn tại không
         self.start_epoch = 0
         self.best_val_loss = float('inf')
@@ -91,7 +92,7 @@ class Trainer:
     def train(self):
         """Chạy quá trình huấn luyện."""
         early_stopping_counter = 0
-
+    
         for epoch in range(self.start_epoch, self.epochs):
             self.model.train()
             total_loss, correct, total = 0, 0, 0
@@ -119,14 +120,16 @@ class Trainer:
 
             train_loss = total_loss / len(self.train_loader)
             train_acc = correct / total
-            val_loss, val_acc, val_precision, val_recall, val_f1 = self._eval()
+            if epoch % self.eval_after == 0:
+                val_loss, val_acc, val_precision, val_recall, val_f1 = self._eval()
 
-            with open(self.acc_loss_path, 'a') as f:
-                f.write(f'{epoch} {train_loss:.4f} {train_acc:.4f} {val_loss:.4f} {val_acc:.4f} {val_precision:.4f} {val_recall:.4f} {val_f1:.4f}\n')
+                with open(self.acc_loss_path, 'a') as f:
+                    f.write(f'{epoch} {train_loss:.4f} {train_acc:.4f} {val_loss:.4f} {val_acc:.4f} {val_precision:.4f} {val_recall:.4f} {val_f1:.4f}\n')
 
-            print(f"Epoch {epoch+1}/{self.epochs}: Train Loss {train_loss:.4f} | Train Acc {train_acc:.4f} | Val Loss {val_loss:.4f} | Val Acc {val_acc:.4f} | Val Precision {val_precision:.4f} | Val Recall {val_recall:.4f} | Val F1 {val_f1:.4f}")
+                print(f"Epoch {epoch+1}/{self.epochs}: Train Loss {train_loss:.4f} | Train Acc {train_acc:.4f} | Val Loss {val_loss:.4f} | Val Acc {val_acc:.4f} | Val Precision {val_precision:.4f} | Val Recall {val_recall:.4f} | Val F1 {val_f1:.4f}")
 
-            self.scheduler.step(val_loss)
+                self.scheduler.step(val_loss)
+                self._save_checkpoint(epoch, val_loss)
 
             # 💾 Lưu checkpoint nếu tốt nhất
             # if val_loss < self.best_val_loss:
@@ -135,8 +138,12 @@ class Trainer:
             #     early_stopping_counter = 0
             # else:
             #     early_stopping_counter += 1
-            self._save_checkpoint(epoch, val_loss)
             # ⛔ Early stopping
             # if early_stopping_counter >= self.patience:
             #     print("⛔ Early stopping triggered!")
             #     break
+            else:
+                with open(self.acc_loss_path, 'a') as f:
+                    f.write(f'{epoch} {train_loss:.4f} {train_acc:.4f}\n')
+
+                print(f"Epoch {epoch+1}/{self.epochs}: Train Loss {train_loss:.4f} | Train Acc {train_acc:.4f}")
