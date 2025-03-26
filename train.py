@@ -13,7 +13,7 @@ print(f"Using device: {DEVICE}")
 EPOCHS = 100
 LEARNING_RATE = 0.01
 WEIGHT_DECAY = 0.005
-BATCH_SIZE = 32
+BATCH_SIZE = 16
 PATIENCE = 7
 
 # LOG_DIR = "logs"
